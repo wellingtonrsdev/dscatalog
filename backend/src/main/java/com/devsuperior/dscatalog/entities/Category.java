@@ -1,12 +1,8 @@
 package com.devsuperior.dscatalog.entities;
 
-import java.io.Serial;
-import java.io.Serializable;
 import java.util.Objects;
 
-public class Category implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 1L;
+public class Category {
 
     private Long id;
     private String name;
