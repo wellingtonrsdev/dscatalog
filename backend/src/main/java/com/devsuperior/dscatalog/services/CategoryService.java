@@ -1,5 +1,6 @@
 package com.devsuperior.dscatalog.services;
 
+import com.devsuperior.dscatalog.dto.CategoryDTO;
 import com.devsuperior.dscatalog.entities.Category;
 import com.devsuperior.dscatalog.repositories.CategoryRepository;
 import jakarta.transaction.Transactional;
@@ -15,7 +16,8 @@ public class CategoryService {
     private CategoryRepository categoryRepository;
 
     @Transactional
-    public List<Category> findAll() {
-        return  categoryRepository.findAll();
+    public List<CategoryDTO> findAll() {
+        List<Category> list = categoryRepository.findAll();
+        return  list.stream().map(CategoryDTO::new).toList();
     }
 }
