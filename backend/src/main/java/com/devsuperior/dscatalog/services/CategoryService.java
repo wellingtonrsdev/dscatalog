@@ -3,12 +3,14 @@ package com.devsuperior.dscatalog.services;
 import com.devsuperior.dscatalog.dto.CategoryDTO;
 import com.devsuperior.dscatalog.entities.Category;
 import com.devsuperior.dscatalog.repositories.CategoryRepository;
+import com.devsuperior.dscatalog.services.exceptions.DatabaseException;
 import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +21,7 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<CategoryDTO> findAll() {
         List<Category> list = categoryRepository.findAll();
         return list.stream().map(CategoryDTO::new).toList();
@@ -51,4 +53,18 @@ public class CategoryService {
             throw new ResourceNotFoundException("Id not found " + id);
         }
     }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public void delete(Long id) {
+        if(!categoryRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Recurso não encontrado");
+        }
+        try {
+            categoryRepository.deleteById(id);
+        }
+        catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("Falha de integridade referencial");
+        }
+    }
+
 }
