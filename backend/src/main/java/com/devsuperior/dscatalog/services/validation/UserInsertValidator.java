@@ -8,16 +8,20 @@ import com.devsuperior.dscatalog.entities.User;
 import com.devsuperior.dscatalog.repositories.UserRepository;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import org.springframework.beans.factory.annotation.Autowired;
 
 
 public class UserInsertValidator implements ConstraintValidator<UserInsertValid, UserInsertDTO> {
 
-    @Autowired
-    private UserRepository repository;
+
+    private final UserRepository repository;
+
+    public UserInsertValidator(UserRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public void initialize(UserInsertValid ann) {
+        // Method implementation is optional
     }
 
     @Override
